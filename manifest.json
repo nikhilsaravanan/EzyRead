@@ -29,11 +29,20 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["src/scripts/contentScript.js"]
+      "js": ["src/scripts/contentScript.js", "src/scripts/dist/ocrScript.bundle.js"]
     },
     {
       "matches": ["*://*/*.html*", "*://*/news/*", "*://*/2024/*", "*://*/politics/*"],
       "js": ["src/scripts/contentScript4.js"]
     }
-  ]
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["node_modules/tesseract.js/dist/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self' 'wasm-unsafe-eval'; object-src 'self'"
+  }
 }

@@ -68,8 +68,24 @@
       <!-- Options for TTS voices will be dynamically added here -->
     </select>
   </div>
-  <div class="textSpeechStatus">
+  <div class="textSpeechStatus" style="display: flex; gap: 10px;">
     <button class="ttsButton" id="ttsChangeTest">Test Voice</button>
+    <button class="ttsButton" id="ttsStopButton" style="background-color: #f44336;">Stop Speech</button>
+  </div>
+  <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+    <label for="ocrToggle" class="productLabel" style="display: flex; align-items: center; justify-content: space-between;">
+      <span style="display: flex; align-items: center;">
+        Enable Image OCR (Text from Images)
+        <div class="helpIcon" style="margin-left: 8px;">
+          <i class="fas fa-question-circle"></i>
+        </div>
+      </span>
+      <div class="toggleButton" style="margin: 0;">
+        <input type="checkbox" id="ocrToggle">
+        <label for="ocrToggle"></label>
+      </div>
+    </label>
+    <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">Click images to extract and read text</p>
   </div>
 </div>
 

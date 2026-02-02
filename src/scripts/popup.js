@@ -73,12 +73,12 @@ document.addEventListener('DOMContentLoaded', function() {
     content.style.display = 'block';
     if (content !== sectionContent) {
       backButton.style.display = 'block';
-      contact.style.marginBottom = '0px'
-      linkWebsite.style.marginBottom = '0px'
+      if (contact) contact.style.marginBottom = '0px';
+      if (linkWebsite) linkWebsite.style.marginBottom = '0px';
     } else {
       backButton.style.display = 'none';
-      contact.style.marginBottom = '10px'
-      linkWebsite.style.marginBottom = '10px'
+      if (contact) contact.style.marginBottom = '10px';
+      if (linkWebsite) linkWebsite.style.marginBottom = '10px';
     }
   }
 
@@ -208,6 +208,22 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.tabs.sendMessage(tabs[0].id, { action: "readHighlightedText" });
     });
   });
+
+  // Add an event listener to the "Stop Speech" button
+  const ttsStopButton = document.getElementById('ttsStopButton');
+  if (ttsStopButton) {
+    ttsStopButton.addEventListener('click', function() {
+      // Stop speech in popup
+      window.speechSynthesis.cancel();
+      
+      // Send message to content script to stop speech
+      chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        if (tabs[0]) {
+          chrome.tabs.sendMessage(tabs[0].id, { action: "stopSpeech" });
+        }
+      });
+    });
+  }
 });
 
 // Function to update the status of lexileToggle in Chrome storage
@@ -229,6 +245,27 @@ lexileToggle.addEventListener('change', function() {
   // Send a message to the content script to toggle the altPopup
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     chrome.tabs.sendMessage(tabs[0].id, { action: "toggleLexilePopup", isChecked: isChecked });
+  });
+});
+
+// OCR Toggle functionality
+function updateOCRToggleStatus(checked) {
+  chrome.storage.local.set({ isOCRToggleChecked: checked });
+}
+
+const ocrToggle = document.getElementById('ocrToggle');
+
+// Retrieve the previous state of ocrToggle from Chrome storage
+chrome.storage.local.get(['isOCRToggleChecked'], function(result) {
+  ocrToggle.checked = result.isOCRToggleChecked || false;
+});
+
+ocrToggle.addEventListener('change', function() {
+  const isChecked = ocrToggle.checked;
+  updateOCRToggleStatus(isChecked);
+  // Send a message to the content script to toggle OCR functionality
+  chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.sendMessage(tabs[0].id, { action: "toggleOCR", isChecked: isChecked });
   });
 });
 
